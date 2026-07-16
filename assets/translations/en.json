@@ -1,0 +1,217 @@
+{
+  "appName": "GlobalEdu AI",
+  "appTagline": "Your Study Abroad Journey Starts Here",
+
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "done": "Done",
+    "next": "Next",
+    "back": "Back",
+    "skip": "Skip",
+    "search": "Search",
+    "noResults": "No results found",
+    "comingSoon": "Coming Soon",
+    "ok": "OK",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "seeAll": "See All"
+  },
+
+  "auth": {
+    "welcomeBack": "Welcome Back",
+    "signInSubtitle": "Sign in to continue your study abroad journey",
+    "email": "Email",
+    "emailHint": "your@email.com",
+    "password": "Password",
+    "passwordHint": "••••••••",
+    "forgotPassword": "Forgot Password?",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "orContinueWith": "or continue with",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "createAccount": "Create Account",
+    "createAccountSubtitle": "Start your study abroad journey today",
+    "fullName": "Full Name",
+    "confirmPassword": "Confirm Password",
+    "agreeTerms": "I agree to the",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithApple": "Continue with Apple",
+    "resetPassword": "Reset Password",
+    "resetPasswordSubtitle": "Enter the email associated with your account and we'll send you a link to reset your password.",
+    "sendResetLink": "Send Reset Link",
+    "checkEmail": "Check Your Email",
+    "backToSignIn": "Back to Sign In",
+    "signOut": "Sign Out",
+    "passwordStrengthWeak": "Weak",
+    "passwordStrengthFair": "Fair",
+    "passwordStrengthGood": "Good",
+    "passwordStrengthStrong": "Strong"
+  },
+
+  "onboarding": {
+    "page1Title": "Find Your Dream University",
+    "page1Subtitle": "Explore thousands of universities worldwide. AI-powered matching to find the perfect fit for your academic goals.",
+    "page2Title": "AI-Powered Guidance",
+    "page2Subtitle": "Get personalized advice from our AI assistant. From application strategy to visa preparation, we've got you covered.",
+    "page3Title": "From Application to Visa",
+    "page3Subtitle": "Track your applications, manage documents, prepare for interviews, and get your visa — all in one app.",
+    "getStarted": "Get Started",
+    "whereToStudy": "Where do you want to study?",
+    "selectCountries": "Select up to 5 countries",
+    "educationLevel": "What level are you pursuing?",
+    "interests": "What are you interested in?",
+    "selectFields": "Select your fields of study",
+    "completeSetup": "Complete Setup",
+    "profileSetup": "Profile Setup"
+  },
+
+  "home": {
+    "hello": "Hello {name}! 👋",
+    "continueJourney": "Let's continue your journey",
+    "yourJourney": "Your Journey",
+    "quickActions": "Quick Actions",
+    "askAi": "Ask AI",
+    "universities": "Universities",
+    "scholarships": "Scholarships",
+    "visaGuide": "Visa Guide",
+    "upcomingDeadlines": "Upcoming Deadlines",
+    "aiInsight": "AI Insight",
+    "daysLeft": "{days} days"
+  },
+
+  "aiChat": {
+    "aiAssistant": "AI Assistant",
+    "online": "Online",
+    "typing": "Typing...",
+    "howCanIHelp": "How can I help you today?",
+    "askAnything": "Ask me anything about studying abroad",
+    "inputPlaceholder": "Ask me anything...",
+    "conversations": "Conversations"
+  },
+
+  "universities": {
+    "title": "Universities",
+    "searchPlaceholder": "Search universities, programs...",
+    "found": "{count} universities found",
+    "worldRank": "World Rank",
+    "acceptance": "Acceptance",
+    "students": "Students",
+    "about": "About",
+    "tuitionFees": "Tuition & Fees",
+    "popularPrograms": "Popular Programs",
+    "requirements": "Requirements",
+    "applicationDeadlines": "Application Deadlines",
+    "startApplication": "Start Application",
+    "askAiAbout": "Ask AI About This University",
+    "compare": "Compare"
+  },
+
+  "applications": {
+    "title": "My Applications",
+    "newApplication": "New Application",
+    "applicationDetail": "Application Detail",
+    "timeline": "Application Timeline",
+    "documentChecklist": "Document Checklist",
+    "createApplication": "Create Application",
+    "statusPreparing": "Preparing",
+    "statusSubmitted": "Submitted",
+    "statusUnderReview": "Under Review",
+    "statusAccepted": "Accepted",
+    "statusRejected": "Rejected"
+  },
+
+  "documents": {
+    "title": "Documents",
+    "upload": "Upload",
+    "aiReview": "AI Review",
+    "preview": "Preview",
+    "uploaded": "Uploaded",
+    "reviewed": "AI Reviewed",
+    "pendingReview": "Pending Review",
+    "overallAssessment": "Overall Assessment",
+    "strengths": "Strengths",
+    "areasForImprovement": "Areas for Improvement",
+    "actionItems": "Action Items"
+  },
+
+  "visa": {
+    "title": "Visa Guide",
+    "selectDestination": "Select Your Destination",
+    "countryGuidance": "Get country-specific visa guidance",
+    "checklist": "Visa Checklist",
+    "interviewPrep": "Interview Preparation",
+    "commonQuestions": "Common Questions",
+    "dos": "Do's",
+    "donts": "Don'ts",
+    "mockInterview": "Practice with AI Mock Interview",
+    "completed": "completed",
+    "processingTime": "Processing Time",
+    "difficulty": "Difficulty"
+  },
+
+  "scholarships": {
+    "title": "Scholarships",
+    "matchScore": "Match",
+    "deadline": "Deadline",
+    "amount": "Amount",
+    "requirements": "Requirements",
+    "applyNow": "Apply Now",
+    "checkEligibility": "Check My Eligibility with AI"
+  },
+
+  "profile": {
+    "title": "Profile",
+    "editProfile": "Edit Profile",
+    "subscription": "Subscription",
+    "notifications": "Notifications",
+    "language": "Language",
+    "helpSupport": "Help & Support",
+    "about": "About",
+    "saveChanges": "Save Changes",
+    "applications": "Applications",
+    "documents": "Documents"
+  },
+
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark",
+    "pushNotifications": "Push Notifications",
+    "deadlineReminders": "Deadline Reminders",
+    "aiTips": "AI Tips",
+    "emailNotifications": "Email Notifications",
+    "dataPrivacy": "Data & Privacy",
+    "deleteAccount": "Delete Account"
+  },
+
+  "subscription": {
+    "title": "Subscription",
+    "unlockPremium": "Unlock Premium",
+    "getUnlimitedAccess": "Get unlimited access to all features",
+    "pro": "Pro",
+    "premium": "Premium",
+    "bestValue": "Best Value",
+    "choosePlan": "Choose {plan}",
+    "restorePurchases": "Restore Purchases",
+    "cancelAnytime": "Cancel anytime. Billed monthly.",
+    "freePlan": "Free Plan",
+    "upgradePlan": "Upgrade your plan"
+  },
+
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all read"
+  }
+}

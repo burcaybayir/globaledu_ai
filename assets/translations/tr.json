@@ -1,0 +1,217 @@
+{
+  "appName": "GlobalEdu AI",
+  "appTagline": "Yurtdışı Eğitim Yolculuğunuz Burada Başlıyor",
+
+  "common": {
+    "loading": "Yükleniyor...",
+    "error": "Bir hata oluştu",
+    "retry": "Tekrar Dene",
+    "cancel": "İptal",
+    "save": "Kaydet",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "done": "Tamam",
+    "next": "İleri",
+    "back": "Geri",
+    "skip": "Atla",
+    "search": "Ara",
+    "noResults": "Sonuç bulunamadı",
+    "comingSoon": "Yakında",
+    "ok": "Tamam",
+    "yes": "Evet",
+    "no": "Hayır",
+    "confirm": "Onayla",
+    "seeAll": "Tümünü Gör"
+  },
+
+  "auth": {
+    "welcomeBack": "Hoş Geldiniz",
+    "signInSubtitle": "Yurtdışı eğitim yolculuğunuza devam etmek için giriş yapın",
+    "email": "E-posta",
+    "emailHint": "email@adresiniz.com",
+    "password": "Şifre",
+    "passwordHint": "••••••••",
+    "forgotPassword": "Şifremi Unuttum?",
+    "signIn": "Giriş Yap",
+    "signUp": "Kayıt Ol",
+    "orContinueWith": "veya şununla devam edin",
+    "noAccount": "Hesabınız yok mu?",
+    "hasAccount": "Zaten hesabınız var mı?",
+    "createAccount": "Hesap Oluştur",
+    "createAccountSubtitle": "Yurtdışı eğitim yolculuğunuza bugün başlayın",
+    "fullName": "Ad Soyad",
+    "confirmPassword": "Şifreyi Onayla",
+    "agreeTerms": "Kabul ediyorum",
+    "termsOfService": "Kullanım Koşulları",
+    "privacyPolicy": "Gizlilik Politikası",
+    "continueWithGoogle": "Google ile devam et",
+    "continueWithApple": "Apple ile devam et",
+    "resetPassword": "Şifre Sıfırla",
+    "resetPasswordSubtitle": "Hesabınızla ilişkili e-postayı girin, şifre sıfırlama bağlantısı göndereceğiz.",
+    "sendResetLink": "Sıfırlama Bağlantısı Gönder",
+    "checkEmail": "E-postanızı Kontrol Edin",
+    "backToSignIn": "Giriş Sayfasına Dön",
+    "signOut": "Çıkış Yap",
+    "passwordStrengthWeak": "Zayıf",
+    "passwordStrengthFair": "Orta",
+    "passwordStrengthGood": "İyi",
+    "passwordStrengthStrong": "Güçlü"
+  },
+
+  "onboarding": {
+    "page1Title": "Hayalinizdeki Üniversiteyi Bulun",
+    "page1Subtitle": "Dünya çapında binlerce üniversiteyi keşfedin. Akademik hedeflerinize en uygun eşleşmeyi yapay zeka ile bulun.",
+    "page2Title": "Yapay Zeka Destekli Rehberlik",
+    "page2Subtitle": "AI asistanımızdan kişiselleştirilmiş tavsiyeler alın. Başvuru stratejisinden vize hazırlığına kadar yanınızdayız.",
+    "page3Title": "Başvurudan Vizeye",
+    "page3Subtitle": "Başvurularınızı takip edin, belgelerinizi yönetin, mülakata hazırlanın ve vizenizi alın — hepsi tek bir uygulamada.",
+    "getStarted": "Başlayın",
+    "whereToStudy": "Nerede okumak istiyorsunuz?",
+    "selectCountries": "En fazla 5 ülke seçin",
+    "educationLevel": "Hangi seviyede eğitim alacaksınız?",
+    "interests": "İlgi alanlarınız neler?",
+    "selectFields": "Çalışma alanlarınızı seçin",
+    "completeSetup": "Kurulumu Tamamla",
+    "profileSetup": "Profil Kurulumu"
+  },
+
+  "home": {
+    "hello": "Merhaba {name}! 👋",
+    "continueJourney": "Yolculuğunuza devam edelim",
+    "yourJourney": "Yolculuğunuz",
+    "quickActions": "Hızlı İşlemler",
+    "askAi": "AI'ya Sor",
+    "universities": "Üniversiteler",
+    "scholarships": "Burslar",
+    "visaGuide": "Vize Rehberi",
+    "upcomingDeadlines": "Yaklaşan Son Tarihler",
+    "aiInsight": "AI Önerisi",
+    "daysLeft": "{days} gün kaldı"
+  },
+
+  "aiChat": {
+    "aiAssistant": "AI Asistan",
+    "online": "Çevrimiçi",
+    "typing": "Yazıyor...",
+    "howCanIHelp": "Size nasıl yardımcı olabilirim?",
+    "askAnything": "Yurtdışı eğitim hakkında her şeyi sorabilirsiniz",
+    "inputPlaceholder": "Bir şeyler sorun...",
+    "conversations": "Konuşmalar"
+  },
+
+  "universities": {
+    "title": "Üniversiteler",
+    "searchPlaceholder": "Üniversite, program ara...",
+    "found": "{count} üniversite bulundu",
+    "worldRank": "Dünya Sıralaması",
+    "acceptance": "Kabul Oranı",
+    "students": "Öğrenci",
+    "about": "Hakkında",
+    "tuitionFees": "Eğitim Ücretleri",
+    "popularPrograms": "Popüler Programlar",
+    "requirements": "Gereksinimler",
+    "applicationDeadlines": "Başvuru Son Tarihleri",
+    "startApplication": "Başvuru Yap",
+    "askAiAbout": "Bu Üniversite Hakkında AI'ya Sor",
+    "compare": "Karşılaştır"
+  },
+
+  "applications": {
+    "title": "Başvurularım",
+    "newApplication": "Yeni Başvuru",
+    "applicationDetail": "Başvuru Detayı",
+    "timeline": "Başvuru Zaman Çizelgesi",
+    "documentChecklist": "Belge Kontrol Listesi",
+    "createApplication": "Başvuru Oluştur",
+    "statusPreparing": "Hazırlanıyor",
+    "statusSubmitted": "Gönderildi",
+    "statusUnderReview": "İncelemede",
+    "statusAccepted": "Kabul Edildi",
+    "statusRejected": "Reddedildi"
+  },
+
+  "documents": {
+    "title": "Belgeler",
+    "upload": "Yükle",
+    "aiReview": "AI İnceleme",
+    "preview": "Önizleme",
+    "uploaded": "Yüklendi",
+    "reviewed": "AI İncelendi",
+    "pendingReview": "İnceleme Bekliyor",
+    "overallAssessment": "Genel Değerlendirme",
+    "strengths": "Güçlü Yönler",
+    "areasForImprovement": "Geliştirilecek Alanlar",
+    "actionItems": "Yapılacaklar"
+  },
+
+  "visa": {
+    "title": "Vize Rehberi",
+    "selectDestination": "Hedefinizi Seçin",
+    "countryGuidance": "Ülkeye özel vize rehberliği alın",
+    "checklist": "Vize Kontrol Listesi",
+    "interviewPrep": "Mülakat Hazırlığı",
+    "commonQuestions": "Sık Sorulan Sorular",
+    "dos": "Yapılması Gerekenler",
+    "donts": "Yapılmaması Gerekenler",
+    "mockInterview": "AI ile Deneme Mülakat Yapın",
+    "completed": "tamamlandı",
+    "processingTime": "İşlem Süresi",
+    "difficulty": "Zorluk"
+  },
+
+  "scholarships": {
+    "title": "Burslar",
+    "matchScore": "Uyum",
+    "deadline": "Son Tarih",
+    "amount": "Miktar",
+    "requirements": "Gereksinimler",
+    "applyNow": "Şimdi Başvur",
+    "checkEligibility": "AI ile Uygunluğumu Kontrol Et"
+  },
+
+  "profile": {
+    "title": "Profil",
+    "editProfile": "Profili Düzenle",
+    "subscription": "Abonelik",
+    "notifications": "Bildirimler",
+    "language": "Dil",
+    "helpSupport": "Yardım & Destek",
+    "about": "Hakkında",
+    "saveChanges": "Değişiklikleri Kaydet",
+    "applications": "Başvurular",
+    "documents": "Belgeler"
+  },
+
+  "settings": {
+    "title": "Ayarlar",
+    "appearance": "Görünüm",
+    "system": "Sistem",
+    "light": "Açık",
+    "dark": "Koyu",
+    "pushNotifications": "Anlık Bildirimler",
+    "deadlineReminders": "Son Tarih Hatırlatmaları",
+    "aiTips": "AI İpuçları",
+    "emailNotifications": "E-posta Bildirimleri",
+    "dataPrivacy": "Veri & Gizlilik",
+    "deleteAccount": "Hesabı Sil"
+  },
+
+  "subscription": {
+    "title": "Abonelik",
+    "unlockPremium": "Premium'u Açın",
+    "getUnlimitedAccess": "Tüm özelliklere sınırsız erişim elde edin",
+    "pro": "Pro",
+    "premium": "Premium",
+    "bestValue": "En İyi Değer",
+    "choosePlan": "{plan} Seçin",
+    "restorePurchases": "Satın Almaları Geri Yükle",
+    "cancelAnytime": "İstediğiniz zaman iptal edin. Aylık faturalandırılır.",
+    "freePlan": "Ücretsiz Plan",
+    "upgradePlan": "Planınızı yükseltin"
+  },
+
+  "notifications": {
+    "title": "Bildirimler",
+    "markAllRead": "Tümünü okundu işaretle"
+  }
+}
