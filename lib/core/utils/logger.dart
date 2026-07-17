@@ -1,5 +1,5 @@
 import 'package:logger/logger.dart' as log_pkg;
-import 'package:globaledu_ai/core/config/env_config.dart';
+
 
 class AppLogger {
   AppLogger._();

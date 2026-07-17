@@ -1,183 +1,212 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:globaledu_ai/core/config/env_config.dart';
-import 'package:globaledu_ai/core/constants/api_constants.dart';
-import 'package:globaledu_ai/core/errors/exceptions.dart';
-import 'package:globaledu_ai/core/network/api_client.dart';
 import 'package:globaledu_ai/core/utils/logger.dart';
-import 'package:globaledu_ai/services/ai/prompt_templates.dart';
+import 'package:globaledu_ai/features/ai_assistant/domain/entities/chat_message.dart';
 
-/// OpenAI service for chat completions and AI features.
-class OpenAiService {
-  OpenAiService({Dio? dio})
-      : _dio = dio ??
-            ApiClient.createOpenAiClient(EnvConfig.openAiApiKey);
+/// Available AI models
+class AiModel {
+  const AiModel({
+    required this.id,
+    required this.name,
+    required this.description,
+    this.isPremium = false,
+    this.contextWindow = 128000,
+    this.icon = '🤖',
+  });
 
-  final Dio _dio;
+  final String id;
+  final String name;
+  final String description;
+  final bool isPremium;
+  final int contextWindow;
+  final String icon;
 
-  /// Sends a chat completion request and returns the full response.
-  Future<String> chatCompletion({
-    required List<Map<String, String>> messages,
-    String? systemPrompt,
-    double temperature = ApiConstants.chatTemperature,
-    int? maxTokens,
-  }) async {
-    try {
-      final allMessages = <Map<String, String>>[
-        if (systemPrompt != null)
-          {'role': 'system', 'content': systemPrompt},
-        ...messages,
-      ];
+  static const gpt4o = AiModel(
+    id: 'gpt-4o',
+    name: 'GPT-4o',
+    description: 'Most capable — text, images, files',
+    isPremium: true,
+    icon: '⚡',
+  );
+  static const gpt4oMini = AiModel(
+    id: 'gpt-4o-mini',
+    name: 'GPT-4o Mini',
+    description: 'Fast and affordable',
+    icon: '🚀',
+  );
+  static const gpt35 = AiModel(
+    id: 'gpt-3.5-turbo',
+    name: 'GPT-3.5 Turbo',
+    description: 'Fast responses, great for chat',
+    icon: '💬',
+  );
+  static const gpt4turbo = AiModel(
+    id: 'gpt-4-turbo',
+    name: 'GPT-4 Turbo',
+    description: 'Powerful with vision support',
+    isPremium: true,
+    icon: '🧠',
+  );
 
-      final response = await _dio.post(
-        ApiConstants.chatCompletionsEndpoint,
-        data: {
-          'model': EnvConfig.openAiModel,
-          'messages': allMessages,
-          'temperature': temperature,
-          'max_tokens': maxTokens ?? EnvConfig.openAiMaxTokens,
-        },
-      );
+  static const all = [gpt4o, gpt4oMini, gpt35, gpt4turbo];
+}
 
-      final content = response.data['choices'][0]['message']['content'] as String;
-      return content.trim();
-    } on DioException catch (e) {
-      AppLogger.error('OpenAI chat completion failed', e);
-      throw AiException(
-        message: _extractErrorMessage(e),
-        code: 'OPENAI_CHAT_ERROR',
-      );
-    } catch (e) {
-      AppLogger.error('Unexpected AI error', e);
-      throw AiException(
-        message: 'Failed to get AI response. Please try again.',
-        code: 'OPENAI_UNKNOWN',
-      );
-    }
-  }
+/// System prompt for the Study Abroad AI
+const _kSystemPrompt = '''
+You are GlobalEdu AI, an expert study abroad assistant helping students navigate their international education journey.
 
-  /// Streams a chat completion response token by token.
-  Stream<String> chatCompletionStream({
-    required List<Map<String, String>> messages,
-    String? systemPrompt,
-    double temperature = ApiConstants.chatTemperature,
-    int? maxTokens,
+You are deeply knowledgeable about:
+- **Universities** worldwide — rankings, programs, admission requirements, campus life
+- **Scholarships & Funding** — merit-based, government grants, university-specific aid
+- **Visa Applications** — student visa processes for USA, UK, Canada, Australia, Germany, and more
+- **IELTS & TOEFL** — preparation strategies, score requirements, test tips
+- **TOEFL, GRE, GMAT** — exam strategies and university requirements
+- **Accommodation** — on-campus vs off-campus, student housing, costs
+- **Part-time Jobs & Internships** — working while studying abroad, work permits
+- **Immigration** — post-study work visas, PR pathways (Canada, Australia, Germany)
+- **Career Planning** — global job markets, networking, career services
+- **Budget Planning** — cost of living, tuition comparisons, financial planning
+
+**Personality:**
+- Warm, encouraging, and professional
+- Give specific, actionable advice (not generic answers)
+- Use bullet points and headers for clarity
+- Always consider the student's background and goals
+- When asked about specific universities, provide real data
+
+**Format:** Use Markdown for all responses — headers, bullet points, bold text, tables where helpful.
+''';
+
+class OpenAIStreamService {
+  OpenAIStreamService._();
+  static final instance = OpenAIStreamService._();
+
+  final _baseUrl = 'https://api.openai.com/v1/chat/completions';
+
+  String get _apiKey => EnvConfig.openAiApiKey;
+
+  /// Stream a response token by token from OpenAI
+  Stream<String> streamCompletion({
+    required List<ChatMessage> messages,
+    String model = 'gpt-4o-mini',
+    double temperature = 0.7,
+    int maxTokens = 2000,
   }) async* {
+    // Build the message list with system prompt
+    final apiMessages = <Map<String, dynamic>>[
+      {'role': 'system', 'content': _kSystemPrompt},
+      ...messages.where((m) => m.role != MessageRole.system).map((m) => m.toApiMessage()),
+    ];
+
+    final body = jsonEncode({
+      'model': model,
+      'messages': apiMessages,
+      'stream': true,
+      'temperature': temperature,
+      'max_tokens': maxTokens,
+    });
+
     try {
-      final allMessages = <Map<String, String>>[
-        if (systemPrompt != null)
-          {'role': 'system', 'content': systemPrompt},
-        ...messages,
-      ];
+      final request = http.Request('POST', Uri.parse(_baseUrl));
+      request.headers.addAll({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $_apiKey',
+      });
+      request.body = body;
 
-      final response = await _dio.post<ResponseBody>(
-        ApiConstants.chatCompletionsEndpoint,
-        data: {
-          'model': EnvConfig.openAiModel,
-          'messages': allMessages,
-          'temperature': temperature,
-          'max_tokens': maxTokens ?? EnvConfig.openAiMaxTokens,
-          'stream': true,
-        },
-        options: Options(responseType: ResponseType.stream),
-      );
+      final response = await request.send();
 
-      final stream = response.data!.stream;
-      String buffer = '';
+      if (response.statusCode != 200) {
+        final errBody = await response.stream.bytesToString();
+        AppLogger.error('OpenAI error ${response.statusCode}: $errBody');
+        yield* _handleError(response.statusCode);
+        return;
+      }
 
-      await for (final chunk in stream) {
-        buffer += utf8.decode(chunk);
-        final lines = buffer.split('\n');
-        buffer = lines.last;
-
-        for (final line in lines.take(lines.length - 1)) {
-          final trimmed = line.trim();
-          if (trimmed.isEmpty || trimmed == 'data: [DONE]') continue;
-          if (!trimmed.startsWith('data: ')) continue;
+      // SSE stream parsing
+      await for (final chunk in response.stream.transform(utf8.decoder)) {
+        final lines = chunk.split('\n');
+        for (final line in lines) {
+          if (!line.startsWith('data: ')) continue;
+          final data = line.substring(6).trim();
+          if (data == '[DONE]') return;
+          if (data.isEmpty) continue;
 
           try {
-            final json = jsonDecode(trimmed.substring(6));
-            final delta = json['choices']?[0]?['delta']?['content'] as String?;
-            if (delta != null && delta.isNotEmpty) {
-              yield delta;
+            final json = jsonDecode(data) as Map<String, dynamic>;
+            final choices = json['choices'] as List<dynamic>?;
+            if (choices == null || choices.isEmpty) continue;
+
+            final delta = choices[0]['delta'] as Map<String, dynamic>?;
+            final content = delta?['content'] as String?;
+            if (content != null && content.isNotEmpty) {
+              yield content;
             }
           } catch (_) {
-            // Skip malformed chunks
+            // skip malformed chunks
           }
         }
       }
-    } on DioException catch (e) {
-      AppLogger.error('OpenAI stream failed', e);
-      throw AiException(
-        message: _extractErrorMessage(e),
-        code: 'OPENAI_STREAM_ERROR',
-      );
+    } catch (e) {
+      AppLogger.error('Stream error', e);
+      yield '\n\n*An error occurred. Please check your API key and connection.*';
     }
   }
 
-  /// Reviews a document using AI.
-  Future<String> reviewDocument({
-    required String documentContent,
-    required String documentType,
-    String? targetInfo,
+  /// Non-streaming for single response
+  Future<String> complete({
+    required List<ChatMessage> messages,
+    String model = 'gpt-4o-mini',
+    double temperature = 0.7,
   }) async {
-    final systemPrompt = PromptTemplates.documentReview
-        .replaceAll('{document_type}', documentType)
-        .replaceAll('{target_info}', targetInfo ?? 'Not specified')
-        .replaceAll('{document_content}', documentContent);
-
-    return chatCompletion(
-      messages: [
-        {'role': 'user', 'content': 'Please review this document.'},
-      ],
-      systemPrompt: systemPrompt,
-      temperature: ApiConstants.reviewTemperature,
-    );
+    final buffer = StringBuffer();
+    await for (final token in streamCompletion(
+      messages: messages,
+      model: model,
+      temperature: temperature,
+    )) {
+      buffer.write(token);
+    }
+    return buffer.toString();
   }
 
-  /// Gets university recommendations based on profile.
-  Future<String> getUniversityRecommendations({
-    required String studentProfile,
-    required List<String> targetCountries,
-    required String educationLevel,
-    required String studyField,
-    String? budget,
-    double? gpa,
-  }) async {
-    final systemPrompt = PromptTemplates.universityRecommendation
-        .replaceAll('{student_profile}', studentProfile)
-        .replaceAll('{target_countries}', targetCountries.join(', '))
-        .replaceAll('{education_level}', educationLevel)
-        .replaceAll('{study_field}', studyField)
-        .replaceAll('{budget}', budget ?? 'Flexible')
-        .replaceAll('{gpa}', gpa?.toString() ?? 'Not provided');
-
-    return chatCompletion(
-      messages: [
-        {
-          'role': 'user',
-          'content': 'Recommend universities that match my profile.',
-        },
-      ],
-      systemPrompt: systemPrompt,
-      temperature: ApiConstants.recommendationTemperature,
-    );
+  /// Generate a conversation title from the first user message
+  Future<String> generateTitle(String firstMessage) async {
+    try {
+      final messages = [
+        ChatMessage(
+          id: 'sys',
+          role: MessageRole.user,
+          content: 'Generate a short (max 5 words) title for this conversation: "$firstMessage". Reply with only the title, no quotes.',
+          createdAt: DateTime.now(),
+        ),
+      ];
+      final title = await complete(messages: messages, model: 'gpt-4o-mini', temperature: 0.3);
+      return title.trim().replaceAll('"', '').take(50);
+    } catch (_) {
+      return firstMessage.length > 40
+          ? '${firstMessage.substring(0, 40)}...'
+          : firstMessage;
+    }
   }
 
-  String _extractErrorMessage(DioException e) {
-    if (e.response?.data is Map) {
-      final error = (e.response!.data as Map)['error'];
-      if (error is Map) {
-        return error['message'] as String? ?? 'AI service error occurred.';
-      }
+  Stream<String> _handleError(int code) async* {
+    switch (code) {
+      case 401:
+        yield '\n\n*Invalid API key. Please add your OpenAI key in the .env file.*';
+      case 429:
+        yield '\n\n*Rate limit exceeded. Please wait a moment and try again.*';
+      case 503:
+        yield '\n\n*OpenAI is temporarily unavailable. Please try again.*';
+      default:
+        yield '\n\n*Request failed (error $code). Please try again.*';
     }
-    if (e.response?.statusCode == 429) {
-      return 'AI rate limit reached. Please wait a moment.';
-    }
-    if (e.response?.statusCode == 401) {
-      return 'AI service authentication failed.';
-    }
-    return 'AI service is temporarily unavailable.';
   }
+}
+
+extension _StringTake on String {
+  String take(int n) => length <= n ? this : substring(0, n);
 }
