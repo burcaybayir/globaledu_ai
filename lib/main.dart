@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -7,10 +8,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:globaledu_ai/app.dart';
 import 'package:globaledu_ai/core/config/env_config.dart';
 import 'package:globaledu_ai/core/config/firebase_guard.dart';
+import 'package:globaledu_ai/firebase_options.dart';
 
-/// Set this to true after running `flutterfire configure`
-/// and importing DefaultFirebaseOptions.
-const bool _firebaseConfigured = false;
+/// Firebase has been configured via `flutterfire configure`.
+const bool _firebaseConfigured = true;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,16 +24,11 @@ Future<void> main() async {
     debugPrint('⚠️ .env file not found, using defaults');
   }
 
-  // Initialize Firebase only when configured
+  // Initialize Firebase
   if (_firebaseConfigured) {
-    // Uncomment after running `flutterfire configure`:
-    //
-    // import 'package:firebase_core/firebase_core.dart';
-    // import 'firebase_options.dart';
-    //
-    // await Firebase.initializeApp(
-    //   options: DefaultFirebaseOptions.currentPlatform,
-    // );
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     FirebaseGuard.markInitialized();
     debugPrint('✅ Firebase initialized');
   } else {
