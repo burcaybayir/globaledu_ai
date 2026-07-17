@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:globaledu_ai/core/theme/app_colors.dart';
 import 'package:globaledu_ai/features/ai_assistant/domain/entities/chat_message.dart';
+import 'package:globaledu_ai/features/ai_assistant/domain/entities/conversation.dart';
 import 'package:globaledu_ai/features/ai_assistant/presentation/providers/chat_provider.dart';
 import 'package:globaledu_ai/features/ai_assistant/presentation/widgets/message_bubble.dart';
 import 'package:globaledu_ai/features/ai_assistant/presentation/widgets/chat_input_bar.dart';
@@ -359,12 +360,16 @@ class _ConversationDrawerState extends ConsumerState<_ConversationDrawer> {
     final convsAsync = ref.watch(conversationsProvider);
     final activeId = ref.watch(activeConversationIdProvider);
 
-    final convs = convsAsync.when(
-      data: (list) =>
-          query.isEmpty ? list : ref.read(conversationsProvider.notifier).search(query),
-      loading: () => <dynamic>[],
-      error: (_, __) => <dynamic>[],
-    );
+    final List<Conversation> convs;
+    switch (convsAsync) {
+      case AsyncData(:final value):
+        convs = query.isEmpty
+            ? value
+            : ref.read(conversationsProvider.notifier).search(query);
+      case _:
+        convs = [];
+    }
+
 
     return DraggableScrollableSheet(
       initialChildSize: 0.75,
