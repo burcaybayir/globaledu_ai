@@ -3,7 +3,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class EnvConfig {
   EnvConfig._();
 
-  static late final String openAiApiKey;
   static late final String openAiModel;
   static late final int openAiMaxTokens;
   static late final String revenueCatAppleKey;
@@ -12,7 +11,6 @@ class EnvConfig {
   static late final bool isDebug;
 
   static void initialize() {
-    openAiApiKey = dotenv.env['OPENAI_API_KEY'] ?? '';
     openAiModel = dotenv.env['OPENAI_MODEL'] ?? 'gpt-4o-mini';
     openAiMaxTokens = int.tryParse(
           dotenv.env['OPENAI_MAX_TOKENS'] ?? '4096',

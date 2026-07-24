@@ -8,7 +8,6 @@ class ApiConstants {
   static const String chatCompletionsEndpoint = '/chat/completions';
   static const String embeddingsEndpoint = '/embeddings';
 
-  static String get openAiApiKey => EnvConfig.openAiApiKey;
   static String get openAiModel => EnvConfig.openAiModel;
   static int get openAiMaxTokens => EnvConfig.openAiMaxTokens;
 
@@ -18,9 +17,8 @@ class ApiConstants {
   static const double recommendationTemperature = 0.5;
 
   // Headers
-  static Map<String, String> get openAiHeaders => {
+  static Map<String, String> get baseHeaders => {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $openAiApiKey',
       };
 
   // Rate Limiting

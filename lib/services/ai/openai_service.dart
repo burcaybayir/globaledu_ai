@@ -1,8 +1,4 @@
-import 'dart:async';
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
-import 'package:globaledu_ai/core/config/env_config.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:globaledu_ai/core/utils/logger.dart';
 import 'package:globaledu_ai/features/ai_assistant/domain/entities/chat_message.dart';
 
@@ -84,75 +80,40 @@ class OpenAIStreamService {
   OpenAIStreamService._();
   static final instance = OpenAIStreamService._();
 
-  final _baseUrl = 'https://api.openai.com/v1/chat/completions';
-
-  String get _apiKey => EnvConfig.openAiApiKey;
-
-  /// Stream a response token by token from OpenAI
+  /// Stream a response (currently yields full response at once from Cloud Function)
   Stream<String> streamCompletion({
     required List<ChatMessage> messages,
     String model = 'gpt-4o-mini',
     double temperature = 0.7,
     int maxTokens = 2000,
   }) async* {
-    // Build the message list with system prompt
     final apiMessages = <Map<String, dynamic>>[
       {'role': 'system', 'content': _kSystemPrompt},
       ...messages.where((m) => m.role != MessageRole.system).map((m) => m.toApiMessage()),
     ];
 
-    final body = jsonEncode({
-      'model': model,
-      'messages': apiMessages,
-      'stream': true,
-      'temperature': temperature,
-      'max_tokens': maxTokens,
-    });
-
     try {
-      final request = http.Request('POST', Uri.parse(_baseUrl));
-      request.headers.addAll({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $_apiKey',
+      final callable = FirebaseFunctions.instance.httpsCallable('chatWithAI');
+      final response = await callable.call<Map<String, dynamic>>({
+        'model': model,
+        'messages': apiMessages,
+        'maxTokens': maxTokens,
       });
-      request.body = body;
 
-      final response = await request.send();
-
-      if (response.statusCode != 200) {
-        final errBody = await response.stream.bytesToString();
-        AppLogger.error('OpenAI error ${response.statusCode}: $errBody');
-        yield* _handleError(response.statusCode);
-        return;
+      final data = response.data as Map<String, dynamic>;
+      
+      if (data['success'] != true) {
+        throw Exception('Cloud Function error: ${data['error']}');
       }
 
-      // SSE stream parsing
-      await for (final chunk in response.stream.transform(utf8.decoder)) {
-        final lines = chunk.split('\n');
-        for (final line in lines) {
-          if (!line.startsWith('data: ')) continue;
-          final data = line.substring(6).trim();
-          if (data == '[DONE]') return;
-          if (data.isEmpty) continue;
-
-          try {
-            final json = jsonDecode(data) as Map<String, dynamic>;
-            final choices = json['choices'] as List<dynamic>?;
-            if (choices == null || choices.isEmpty) continue;
-
-            final delta = choices[0]['delta'] as Map<String, dynamic>?;
-            final content = delta?['content'] as String?;
-            if (content != null && content.isNotEmpty) {
-              yield content;
-            }
-          } catch (_) {
-            // skip malformed chunks
-          }
-        }
-      }
+      yield data['response'] as String;
+      
+    } on FirebaseFunctionsException catch (e) {
+      AppLogger.error('Firebase Functions error', e, e.stackTrace);
+      yield* _handleError(e.code);
     } catch (e) {
       AppLogger.error('Stream error', e);
-      yield '\n\n*An error occurred. Please check your API key and connection.*';
+      yield '\n\n*An error occurred. Please check your connection.*';
     }
   }
 
@@ -193,16 +154,14 @@ class OpenAIStreamService {
     }
   }
 
-  Stream<String> _handleError(int code) async* {
+  Stream<String> _handleError(String code) async* {
     switch (code) {
-      case 401:
-        yield '\n\n*Invalid API key. Please add your OpenAI key in the .env file.*';
-      case 429:
-        yield '\n\n*Rate limit exceeded. Please wait a moment and try again.*';
-      case 503:
-        yield '\n\n*OpenAI is temporarily unavailable. Please try again.*';
+      case 'unauthenticated':
+        yield '\n\n*You must be logged in to use the AI.*';
+      case 'resource-exhausted':
+        yield '\n\n*You have run out of AI credits. Please upgrade your plan.*';
       default:
-        yield '\n\n*Request failed (error $code). Please try again.*';
+        yield '\n\n*Request failed. Please try again.*';
     }
   }
 }

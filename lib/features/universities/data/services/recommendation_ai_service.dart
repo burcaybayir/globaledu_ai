@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/foundation.dart';
-import 'package:globaledu_ai/core/config/env_config.dart';
 import 'package:globaledu_ai/core/utils/logger.dart';
 import 'package:globaledu_ai/features/universities/domain/entities/recommendation_filters.dart';
 import 'package:globaledu_ai/features/universities/domain/entities/university_recommendation.dart';
@@ -10,48 +9,36 @@ class RecommendationAiService {
   RecommendationAiService._();
   static final instance = RecommendationAiService._();
 
-  static const _baseUrl = 'https://api.openai.com/v1/chat/completions';
-  String get _apiKey => EnvConfig.openAiApiKey;
-
-  final _dio = Dio();
-
-  /// Builds prompt and calls OpenAI; returns parsed recommendations.
+  /// Builds prompt and calls Firebase Cloud Function; returns parsed recommendations.
   Future<List<UniversityRecommendation>> getRecommendations(
     RecommendationPreferences prefs,
   ) async {
     final prompt = _buildPrompt(prefs);
 
     try {
-      final response = await _dio.post(
-        _baseUrl,
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $_apiKey',
-          },
-        ),
-        data: {
-          'model': 'gpt-4o-mini',
-          'messages': [
-            {'role': 'system', 'content': _systemPrompt},
-            {'role': 'user', 'content': prompt},
-          ],
-          'temperature': 0.7,
-          'max_tokens': 4000,
-          'response_format': {'type': 'json_object'},
-        },
-      );
+      final callable = FirebaseFunctions.instance.httpsCallable('chatWithAI');
+      
+      final response = await callable.call<Map<String, dynamic>>({
+        'model': 'gpt-4o-mini',
+        'messages': [
+          {'role': 'system', 'content': _systemPrompt},
+          {'role': 'user', 'content': prompt},
+        ],
+        'maxTokens': 4000,
+      });
 
-      if (response.statusCode != 200) {
-        AppLogger.error('AI error ${response.statusCode}: ${response.data}');
-        throw Exception('AI service error: ${response.statusCode}');
+      final data = response.data as Map<String, dynamic>;
+      
+      if (data['success'] != true) {
+        throw Exception('Cloud Function error: ${data['error'] ?? 'Unknown error'}');
       }
 
-      final json = response.data as Map<String, dynamic>;
-      final content =
-          json['choices'][0]['message']['content'] as String;
-
+      final content = data['response'] as String;
       return _parseRecommendations(content);
+      
+    } on FirebaseFunctionsException catch (e) {
+      AppLogger.error('Firebase Functions error: ${e.code} - ${e.message}', e, e.stackTrace);
+      rethrow;
     } catch (e, st) {
       AppLogger.error('Recommendation AI error', e, st);
       rethrow;
