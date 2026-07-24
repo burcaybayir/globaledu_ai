@@ -61,7 +61,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       // Splash → redirect based on auth
       if (currentPath == RouteNames.splashPath) {
-        return isLoggedIn ? RouteNames.shellPath : RouteNames.welcomePath;
+        return isLoggedIn
+            ? '${RouteNames.shellPath}/${RouteNames.homePath}'
+            : RouteNames.welcomePath;
       }
 
       // Not logged in & not on a public path → welcome
@@ -71,7 +73,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       // Logged in & on auth path → home
       if (isLoggedIn && authPaths.contains(currentPath)) {
-        return RouteNames.shellPath;
+        return '${RouteNames.shellPath}/${RouteNames.homePath}';
+      }
+
+      // Bare shell path → home
+      if (currentPath == RouteNames.shellPath) {
+        return '${RouteNames.shellPath}/${RouteNames.homePath}';
       }
 
       return null;

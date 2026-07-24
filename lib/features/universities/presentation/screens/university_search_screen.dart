@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:globaledu_ai/core/router/route_names.dart';
 import 'package:globaledu_ai/core/theme/app_colors.dart';
-import 'package:globaledu_ai/core/widgets/section_header.dart';
-import 'package:globaledu_ai/core/widgets/status_badge.dart';
 
 class UniversitySearchScreen extends ConsumerStatefulWidget {
   const UniversitySearchScreen({super.key});

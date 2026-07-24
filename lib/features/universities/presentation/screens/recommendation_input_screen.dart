@@ -32,7 +32,6 @@ class _RecommendationInputScreenState
   bool _workAfterGrad = false;
 
   late AnimationController _fadeCtrl;
-  late Animation<double> _fadeAnim;
 
   static const _countries = [
     ('🇺🇸', 'USA'), ('🇬🇧', 'UK'), ('🇨🇦', 'Canada'),
@@ -59,7 +58,6 @@ class _RecommendationInputScreenState
       vsync: this,
       duration: const Duration(milliseconds: 400),
     )..forward();
-    _fadeAnim = CurvedAnimation(parent: _fadeCtrl, curve: Curves.easeOut);
   }
 
   @override
