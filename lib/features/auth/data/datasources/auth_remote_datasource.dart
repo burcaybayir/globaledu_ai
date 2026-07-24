@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:globaledu_ai/core/constants/firebase_constants.dart';
 import 'package:globaledu_ai/core/errors/exceptions.dart';
@@ -69,18 +70,30 @@ class AuthRemoteDataSource {
   /// Sign in with Google.
   Future<UserModel> signInWithGoogle() async {
     try {
-      final googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        throw const AuthException(message: 'Google sign-in was cancelled');
+      final UserCredential userCredential;
+
+      if (kIsWeb) {
+        // On web, use Firebase Auth's signInWithPopup — no client ID meta tag needed.
+        final googleProvider = GoogleAuthProvider();
+        googleProvider.addScope('email');
+        googleProvider.addScope('profile');
+        userCredential = await _auth.signInWithPopup(googleProvider);
+      } else {
+        // On mobile, use the google_sign_in package.
+        final googleUser = await _googleSignIn.signIn();
+        if (googleUser == null) {
+          throw const AuthException(message: 'Google sign-in was cancelled');
+        }
+
+        final googleAuth = await googleUser.authentication;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        userCredential = await _auth.signInWithCredential(credential);
       }
 
-      final googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final userCredential = await _auth.signInWithCredential(credential);
       final user = userCredential.user!;
 
       // Create or update user in Firestore
@@ -105,6 +118,8 @@ class AuthRemoteDataSource {
         message: e.message ?? 'Google sign-in failed',
         code: e.code,
       );
+    } catch (e) {
+      throw AuthException(message: 'Google sign-in failed: $e');
     }
   }
 

@@ -12,6 +12,8 @@ import 'package:globaledu_ai/features/onboarding/presentation/screens/profile_se
 import 'package:globaledu_ai/features/home/presentation/screens/home_screen.dart';
 import 'package:globaledu_ai/features/universities/presentation/screens/university_search_screen.dart';
 import 'package:globaledu_ai/features/universities/presentation/screens/university_detail_screen.dart';
+import 'package:globaledu_ai/features/universities/presentation/screens/recommendation_input_screen.dart';
+import 'package:globaledu_ai/features/universities/presentation/screens/university_recommendation_screen.dart';
 import 'package:globaledu_ai/features/ai_assistant/presentation/screens/ai_chat_screen.dart';
 import 'package:globaledu_ai/features/ai_assistant/presentation/screens/conversation_list_screen.dart';
 import 'package:globaledu_ai/features/applications/presentation/screens/applications_screen.dart';
@@ -194,6 +196,24 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     child: UniversityDetailScreen(universityId: id),
                   );
                 },
+              ),
+              GoRoute(
+                name: RouteNames.recommendationInput,
+                path: 'recommend',
+                parentNavigatorKey: _rootNavigatorKey,
+                pageBuilder: (context, state) => RouteTransitions.slideUp(
+                  state: state,
+                  child: const RecommendationInputScreen(),
+                ),
+              ),
+              GoRoute(
+                name: RouteNames.recommendations,
+                path: 'recommendations',
+                parentNavigatorKey: _rootNavigatorKey,
+                pageBuilder: (context, state) => RouteTransitions.slideRight(
+                  state: state,
+                  child: const UniversityRecommendationScreen(),
+                ),
               ),
             ],
           ),

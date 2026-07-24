@@ -113,6 +113,67 @@ class _UniversitySearchScreenState
             ),
           ),
 
+          // ── AI Recommend CTA Banner ──────────────────────────────────
+          SliverToBoxAdapter(
+            child: GestureDetector(
+              onTap: () => context.goNamed(RouteNames.recommendationInput),
+              child: Container(
+                margin: const EdgeInsets.fromLTRB(16, 14, 16, 4),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  gradient: AppColors.primaryGradient,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withOpacity(0.35),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: const Center(
+                        child: Text('✨', style: TextStyle(fontSize: 24)),
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'AI University Finder',
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          Text(
+                            'Get personalized recommendations based on your profile',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: Colors.white.withOpacity(0.8),
+                              fontSize: 11,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.arrow_forward_ios_rounded,
+                        color: Colors.white, size: 16),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
           // ── Results count ────────────────────────────────────────────────
           SliverToBoxAdapter(
             child: Padding(

@@ -44,6 +44,10 @@ class RouteNames {
   static const String universityDetailPath = 'universities/:id';
   static const String compare = 'compare';
   static const String comparePath = 'universities/compare';
+  static const String recommendationInput = 'recommendation-input';
+  static const String recommendationInputPath = 'universities/recommend';
+  static const String recommendations = 'recommendations';
+  static const String recommendationsPath = 'universities/recommendations';
 
   // ─── AI Assistant ───
   static const String aiChat = 'ai-chat';
